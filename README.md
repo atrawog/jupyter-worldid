@@ -18,11 +18,14 @@ This proof of concept (PoC) demonstrates a data analytics system incorporating W
 
 ## Screenshots
 
-![JupyterHub WorldID](jupyter_startscreen.png)
+![JupyterHub WorldID](jupyter_worldid.png)
 *JupyterHub World ID authentication*
 
-![JupyterLab](jupyter_lab.png)
+![JupyterLab Erigon](jupyter_erigon.png)
 *JupyterLab with Erigon notebook*
+
+![JupyterLab Web3](jupyter_web3.png)
+*Etherium Blockchain parsing with web3*
 
 ## Usage
 
