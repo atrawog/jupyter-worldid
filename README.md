@@ -4,17 +4,23 @@
 
 This proof of concept (PoC) demonstrates a data analytics system with World ID authentication. The system integrates several key technologies to provide a comprehensive solution for secure and scalable data analysis.
 
-### Key Components
+## Key Components
 
 - **[JupyterHub](https://jupyterhub.readthedocs.io)**: Multi-user server for Jupyter notebooks.
 - **[JupyterLab](https://jupyterlab.readthedocs.io/en/latest/)**: Web-based interactive development environment for Jupyter notebooks.
-- **[Erigon](https://erigon.tech/)**: Ethereum implementation on the Go programming language.
+- **[Erigon](https://erigon.tech/)**: Ethereum Archive Node.
 - **[Grafana](https://grafana.com/grafana/dashboards/)**: Open-source analytics & monitoring solution.
 - **[Traefik](https://traefik.io/traefik/)**: Modern HTTP reverse proxy and load balancer.
 - **[Prometheus](https://prometheus.io/docs/introduction/overview/)**: Monitoring and alerting toolkit.
 - **[Node Exporter](https://prometheus.io/docs/guides/node-exporter/)**: Prometheus exporter for hardware and OS metrics.
 - **[cAdvisor](https://github.com/google/cadvisor)**: Container advisor that provides insights into resource usage and performance characteristics of running containers.
 - **BlockScience**: Data analytics notebook for Ethereum, based on [Jupyter Data Science Notebook](https://hub.docker.com/r/jupyter/datascience-notebook/).
+
+## Screenshoots
+
+<img src="jupyter_startscreen.png" alt="JupyterHub WorldID" width="800"/>
+
+<img src="jupyter_lab.png" alt="JupyterLab" width="800"/>
 
 ## Usage
 
