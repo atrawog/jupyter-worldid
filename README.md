@@ -2,25 +2,27 @@
 
 ## Overview
 
-This proof of concept (PoC) demonstrates a data analytics system with World ID authentication. The system integrates several key technologies to provide a comprehensive solution for secure and scalable data analysis.
+This proof of concept (PoC) demonstrates a data analytics system incorporating World ID authentication. It integrates several key technologies to provide a comprehensive data analysis solution for the Ethereum Blockchain.
 
 ## Key Components
 
-- **[JupyterHub](https://jupyterhub.readthedocs.io)**: Multi-user server for Jupyter notebooks.
-- **[JupyterLab](https://jupyterlab.readthedocs.io/en/latest/)**: Web-based interactive development environment for Jupyter notebooks.
-- **[Erigon](https://erigon.tech/)**: Ethereum Archive Node.
-- **[Grafana](https://grafana.com/grafana/dashboards/)**: Open-source analytics & monitoring solution.
-- **[Traefik](https://traefik.io/traefik/)**: Modern HTTP reverse proxy and load balancer.
-- **[Prometheus](https://prometheus.io/docs/introduction/overview/)**: Monitoring and alerting toolkit.
-- **[Node Exporter](https://prometheus.io/docs/guides/node-exporter/)**: Prometheus exporter for hardware and OS metrics.
-- **[cAdvisor](https://github.com/google/cadvisor)**: Container advisor that provides insights into resource usage and performance characteristics of running containers.
-- **BlockScience**: Data analytics notebook for Ethereum, based on [Jupyter Data Science Notebook](https://hub.docker.com/r/jupyter/datascience-notebook/).
+- **[JupyterHub](https://jupyterhub.readthedocs.io)**: A multi-user server for Jupyter notebooks.
+- **[JupyterLab](https://jupyterlab.readthedocs.io/en/latest/)**: A web-based interactive development environment for Jupyter notebooks.
+- **[Erigon](https://erigon.tech/)**: An Ethereum Archive Node.
+- **[Grafana](https://grafana.com/grafana/dashboards/)**: An open-source analytics and monitoring solution.
+- **[Traefik](https://traefik.io/traefik/)**: A modern HTTP reverse proxy and load balancer.
+- **[Prometheus](https://prometheus.io/docs/introduction/overview/)**: A monitoring and alerting toolkit.
+- **[Node Exporter](https://prometheus.io/docs/guides/node-exporter/)**: A Prometheus exporter for hardware and OS metrics.
+- **[cAdvisor](https://github.com/google/cadvisor)**: A container advisor that provides insights into the resource usage and performance characteristics of running containers.
+- **BlockScience**: A data analytics notebook for Ethereum, based on the [Jupyter Data Science Notebook](https://hub.docker.com/r/jupyter/datascience-notebook/).
 
-## Screenshoots
+## Screenshots
 
-<img src="jupyter_startscreen.png" alt="JupyterHub WorldID" width="800"/>
+![JupyterHub WorldID](jupyter_startscreen.png)
+*JupyterHub World ID authentication*
 
-<img src="jupyter_lab.png" alt="JupyterLab" width="800"/>
+![JupyterLab](jupyter_lab.png)
+*JupyterLab with Erigon notebook*
 
 ## Usage
 
@@ -30,42 +32,42 @@ This PoC includes two Docker Compose configurations: one for local testing and a
 
 #### Build Services
 
-- `make build` - Build development services.
-- `make build-prod` - Build production services.
+- `make build`: Build development services.
+- `make build-prod`: Build production services.
 
 #### Pull Services
 
-- `make pull` - Pull development service images.
-- `make pull-prod` - Pull production service images.
+- `make pull`: Pull development service images.
+- `make pull-prod`: Pull production service images.
 
 #### Start Services
 
-- `make start` - Build, pull, and start development services.
-- `make start-prod` - Build, pull, and start production services.
+- `make start`: Build, pull, and start development services.
+- `make start-prod`: Build, pull, and start production services.
 
 #### Stop Services
 
-- `make stop` - Stop development services.
-- `make stop-prod` - Stop production services.
+- `make stop`: Stop development services.
+- `make stop-prod`: Stop production services.
 
 #### Bring Down Services
 
-- `make down` - Bring down development services.
-- `make down-prod` - Bring down production services.
+- `make down`: Bring down development services.
+- `make down-prod`: Bring down production services.
 
 #### Destroy Services
 
-- `make destroy` - Stop and remove development services and volumes.
-- `make destroy-prod` - Stop and remove production services and volumes.
+- `make destroy`: Stop and remove development services and volumes.
+- `make destroy-prod`: Stop and remove production services and volumes.
 
 #### View Logs
 
-- `make logs` - View logs for development services.
-- `make logs-prod` - View logs for production services.
+- `make logs`: View logs for development services.
+- `make logs-prod`: View logs for production services.
 
 #### Prune Docker Containers
 
-- `make prune` - Prune stopped Docker containers.
+- `make prune`: Prune stopped Docker containers.
 
 ## Getting Started
 
