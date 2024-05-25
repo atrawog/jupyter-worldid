@@ -2,24 +2,26 @@ services:
   jupyterhub:
     build:
       context: ./docker/jupyterhub
-    container_name: devel-jupyterhub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8000:8000"
     environment:
-      OAUTH_CLIENT_ID: ${DEVEL_OAUTH_CLIENT_ID}
-      OAUTH_CLIENT_SECRET: ${DEVEL_OAUTH_CLIENT_SECRET}
-      OAUTH_CALLBACK_URL: ${DEVEL_OAUTH_CALLBACK_URL}
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
+      OAUTH_CALLBACK_URL: ${OAUTH_CALLBACK_URL}
+      JUPITER_ADMIN: ${JUPITER_ADMIN}
+      JUPITER_LOGLEVEL: ${JUPITER_LOGLEVEL}
+      JUPITER_SPAWNIMAGE: ${JUPITER_SPAWNIMAGE}
+      JUPITER_NETWORK: ${COMPOSE_PROJECT_NAME}_bridge
     profiles:
       - jupyterhub
     networks:
-      - jupyter-devel
+      - bridge
 
   erigon:
     image: thorax/erigon:latest
     user: root
-    container_name: devel-erigon
     volumes:
       - ./mnt/devel/erigon:/erigon
     ports:
@@ -47,24 +49,20 @@ services:
     profiles:
       - erigon
     networks:
-      - jupyter-devel
+      - bridge
 
   prometheus:
     build:
       context: ./docker/prometheus
-    container_name: devel-prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - 9090:9090
     profiles:
       - monitoring
     networks:
-      - jupyter-devel
+      - bridge
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
-    container_name: devel-nodeexporter
     command:
       - '--path.rootfs=/host'
     volumes:
@@ -72,35 +70,31 @@ services:
     profiles:
       - monitoring
     networks:
-      - jupyter-devel
+      - bridge
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    container_name: devel-cadvisor
     volumes:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
-    ports:
-      - 8080:8080
     profiles:
       - monitoring
     networks:
-      - jupyter-devel
+      - bridge
 
   grafana:
     build:
       context: ./docker/grafana
-    container_name: devel-grafana
     ports:
       - 3000:3000
     profiles:
       - monitoring
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${DEVEL_GF_SECURITY_ADMIN_PASSWORD}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
     networks:
-      - jupyter-devel
+      - bridge
 
   blockscience:
     build:
@@ -110,7 +104,6 @@ services:
       - buildonly
 
 networks:
-  jupyter-devel:
-    name: jupyter-devel
+  bridge:
     driver: bridge
     attachable: true

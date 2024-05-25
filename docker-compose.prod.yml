@@ -2,7 +2,7 @@ services:
   traefik:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`traefik.${PROD_DOMAIN}`)"
+      - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
@@ -14,7 +14,7 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=${PROD_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--log.level=INFO"
       - "--accesslog=true"
@@ -27,46 +27,25 @@ services:
     profiles:
       - jupyterhub
     networks:
-      - jupyter-prod
-
+      - bridge
 
   jupyterhub:
-    build:
-      context: ./docker/jupyterhub
-      args:
-        JUPYTERHUB_CONFIG_FILE: jupyterhub_config_prod.py
-    container_name: prod-jupyterhub
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      OAUTH_CLIENT_ID: ${PROD_OAUTH_CLIENT_ID}
-      OAUTH_CLIENT_SECRET: ${PROD_OAUTH_CLIENT_SECRET}
-      OAUTH_CALLBACK_URL: ${PROD_OAUTH_CALLBACK_URL}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jupyterhub.rule=Host(`jupyter.${PROD_DOMAIN}`)"
+      - "traefik.http.routers.jupyterhub.rule=Host(`jupyter.${DOMAIN}`)"
       - "traefik.http.routers.jupyterhub.entrypoints=websecure"
       - "traefik.http.routers.jupyterhub.tls.certresolver=myresolver"
       - "traefik.http.services.jupyterhub.loadbalancer.server.port=8000"
-    ports:
-      - "8000:8000"
-    profiles:
-      - jupyterhub
-    networks:
-      - jupyter-prod
+    ports: !reset []
+
 
   erigon:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.erigon.rule=Host(`erigon.${PROD_DOMAIN}`)"
+      - "traefik.http.routers.erigon.rule=Host(`erigon.${DOMAIN}`)"
       - "traefik.http.routers.erigon.entrypoints=websecure"
       - "traefik.http.routers.erigon.tls.certresolver=myresolver"
       - "traefik.http.services.erigon.loadbalancer.server.port=8545"
-    image: thorax/erigon:latest
-    container_name: prod-erigon
-    user: root
-    volumes:
-      - ./mnt/prod/erigon:/erigon
     command: >
       --chain=mainnet
       --http
@@ -85,73 +64,13 @@ services:
       --torrent.download.rate=512mb
       --log.console.verbosity=debug
       --metrics
-    profiles:
-      - erigon
-    networks:
-      - jupyter-prod
-
-  prometheus:
-    build:
-      context: ./docker/prometheus
-    container_name: prod-prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    profiles:
-      - monitoring
-    networks:
-      - jupyter-prod
-
-  node-exporter:
-    image: quay.io/prometheus/node-exporter:latest
-    container_name: prod-nodeexporter
-    command:
-      - '--path.rootfs=/host'
-    volumes:
-      - '/:/host:ro,rslave'
-    profiles:
-      - monitoring     
-    networks:
-      - jupyter-prod
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: prod-cadvisor
-    volumes:
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    profiles:
-      - monitoring
-    networks:
-      - jupyter-prod
+    ports: !reset []
 
   grafana:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.${PROD_DOMAIN}`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls.certresolver=myresolver"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
-    build:
-      context: ./docker/grafana
-    container_name: prod-grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${PROD_GF_SECURITY_ADMIN_PASSWORD}
-    profiles:
-      - monitoring
-    networks:
-      - jupyter-prod
-
-  blockscience:
-    build:
-      context: ./docker/blockscience
-    image: blockscience:latest
-    profiles:
-      - buildonly
-
-networks:
-  jupyter-prod:
-    name: jupyter-prod
-    driver: bridge
-    attachable: true
+    ports: !reset []
