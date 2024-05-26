@@ -3,8 +3,8 @@
 COMPOSE_FILE=docker-compose.yml
 COMPOSE_FILE_PROD=docker-compose.prod.yml
 PROFILE_ARG=--profile
-PROJECT=jupyter-devel
-PROJECT_PROD=jupyter-prod
+PROJECT=jupyterwld-devel
+PROJECT_PROD=jupyterwld-prod
 
 SERVICES ?= jupyterhub erigon monitoring
 BUILD ?= jupyterhub monitoring buildonly

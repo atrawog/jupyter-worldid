@@ -13,7 +13,6 @@ class WorldIDOAuthenticator(OAuthenticator):
     authorize_url = "https://id.worldcoin.org/authorize"
     token_url = "https://id.worldcoin.org/token"
     userdata_url = "https://id.worldcoin.org/userinfo"
-    introspect_url = "https://id.worldcoin.org/introspect"  # Assuming there is an introspection endpoint
     scope = ['openid', 'profile', 'email']
     username_map = {}
 
@@ -43,12 +42,6 @@ class WorldIDOAuthenticator(OAuthenticator):
                 app_log.error("Failed to retrieve access token")
                 return None
 
-            # Validate the access token
-            # validation_result = await self.validate_access_token(http_client, access_token)
-            # if not validation_result:
-            #     app_log.error("Invalid access token")
-            #     return None
-
             # Fetch user information with the validated access token
             req = httpclient.HTTPRequest(self.userdata_url, method="GET", headers={"Authorization": f"Bearer {access_token}"})
             user_response = await http_client.fetch(req)
@@ -77,32 +70,6 @@ class WorldIDOAuthenticator(OAuthenticator):
             app_log.error(f"Error during OAuth authentication: {str(e)}")
 
         return None
-
-    async def validate_access_token(self, http_client, access_token):
-        """
-        Validates the access token using the introspection endpoint.
-        """
-        try:
-            body = urllib.parse.urlencode({
-                "token": access_token,
-                "client_id": self.client_id,
-                "client_secret": self.client_secret
-            })
-            headers = {"Content-Type": "application/x-www-form-urlencoded"}
-            app_log.debug(f"Validating access token with body: {body}")
-
-            response = await http_client.fetch(self.introspect_url, method="POST", headers=headers, body=body)
-            introspection_result = json.loads(response.body)
-            app_log.debug(f"Introspection result: {introspection_result}")
-
-            # Return the "active" status of the token
-            return introspection_result.get("active", False)
-        except httpclient.HTTPError as e:
-            app_log.error(f"HTTPError during token introspection: {str(e)}")
-        except Exception as e:
-            app_log.error(f"Error during token introspection: {str(e)}")
-
-        return False
 
 c.JupyterHub.authenticator_class = WorldIDOAuthenticator
 c.WorldIDOAuthenticator.client_id = os.environ.get('OAUTH_CLIENT_ID')

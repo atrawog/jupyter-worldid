@@ -7,7 +7,6 @@ services:
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=myresolver"
     image: traefik:v3.0.1
-    container_name: prod-traefik
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -46,6 +45,8 @@ services:
       - "traefik.http.routers.erigon.entrypoints=websecure"
       - "traefik.http.routers.erigon.tls.certresolver=myresolver"
       - "traefik.http.services.erigon.loadbalancer.server.port=8545"
+    volumes:
+      - ./mnt/prod/erigon:/erigon
     command: >
       --chain=mainnet
       --http
