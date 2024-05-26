@@ -1,4 +1,4 @@
-# Makefile for managing COMPOSE_PROJECT_NAME=$(PROJECT) docker compose services
+# Makefile for managing COMPOSE_PROJECT_NAME=$(PROJECT) docker compose PROFILES
 
 COMPOSE_FILE=docker-compose.yml
 COMPOSE_FILE_PROD=docker-compose.prod.yml
@@ -6,17 +6,17 @@ PROFILE_ARG=--profile
 PROJECT=jupyterwld-devel
 PROJECT_PROD=jupyterwld-prod
 
-SERVICES ?= jupyterhub erigon monitoring
+PROFILES ?= jupyterhub erigon monitoring
 BUILD ?= jupyterhub monitoring buildonly
 
 .PHONY: build build-prod pull pull-prod up up-prod stop stop-prod down down-prod destroy destroy-prod logs logs-prod prune
 
 define DOCKER_COMPOSE
-	COMPOSE_PROJECT_NAME=$(PROJECT) docker compose -f $(COMPOSE_FILE) $(foreach service,$(SERVICES),$(PROFILE_ARG) $(service)) $1 $2 $3 $4
+	COMPOSE_PROJECT_NAME=$(PROJECT) docker compose -f $(COMPOSE_FILE) $(foreach service,$(PROFILES),$(PROFILE_ARG) $(service)) $1 $2 $3 $4
 endef
 
 define DOCKER_COMPOSE_PROD
-	COMPOSE_PROJECT_NAME=$(PROJECT_PROD) docker compose --env-file=.env --env-file=.env.prod -f $(COMPOSE_FILE) -f $(COMPOSE_FILE_PROD) $(foreach service,$(SERVICES),$(PROFILE_ARG) $(service)) $1 $2 $3 $4
+	COMPOSE_PROJECT_NAME=$(PROJECT_PROD) docker compose --env-file=.env --env-file=.env.prod -f $(COMPOSE_FILE) -f $(COMPOSE_FILE_PROD) $(foreach service,$(PROFILES),$(PROFILE_ARG) $(service)) $1 $2 $3 $4
 endef
 
 define DOCKER_COMPOSE_BUILD

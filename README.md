@@ -2,30 +2,84 @@
 
 ## Overview
 
-This proof of concept (PoC) demonstrates a data analytics system incorporating World ID authentication. It integrates several key technologies to provide a comprehensive data analysis solution for the Ethereum Blockchain.
+This proof of concept (PoC) demonstrates an advanced data analytics system incorporating World ID authentication. It integrates several key technologies to provide a comprehensive data analysis solution for the Ethereum Blockchain.
 
 ## Key Components
 
-- **[JupyterHub](https://jupyterhub.readthedocs.io)**: A multi-user server for Jupyter notebooks.
-- **[JupyterLab](https://jupyterlab.readthedocs.io/en/latest/)**: A web-based interactive development environment for Jupyter notebooks.
-- **[Erigon](https://erigon.tech/)**: An Ethereum Archive Node.
-- **[Grafana](https://grafana.com/grafana/dashboards/)**: An open-source analytics and monitoring solution.
-- **[Traefik](https://traefik.io/traefik/)**: A modern HTTP reverse proxy and load balancer.
-- **[Prometheus](https://prometheus.io/docs/introduction/overview/)**: A monitoring and alerting toolkit.
-- **[Node Exporter](https://prometheus.io/docs/guides/node-exporter/)**: A Prometheus exporter for hardware and OS metrics.
-- **[cAdvisor](https://github.com/google/cadvisor)**: A container advisor that provides insights into the resource usage and performance characteristics of running containers.
-- **BlockScience**: A data analytics notebook for Ethereum, based on the [Jupyter Data Science Notebook](https://hub.docker.com/r/jupyter/datascience-notebook/).
+### JupyterHub and JupyterLab
+
+- **[JupyterHub](https://jupyterhub.readthedocs.io)**: A multi-user server that allows multiple users to access Jupyter notebooks concurrently.
+- **[JupyterLab](https://jupyterlab.readthedocs.io/en/latest/)**: A versatile web-based interactive development environment for working with Jupyter notebooks.
+- **BlockScience**: A specialized data analytics notebook tailored for Ethereum, derived from the [Jupyter Data Science Notebook](https://hub.docker.com/r/jupyter/datascience-notebook/).
+- **[Traefik](https://traefik.io/traefik/)**: A modern, efficient HTTP reverse proxy and load balancer, crucial for managing web traffic to the JupyterHub server.
+
+### Erigon
+
+- **[Erigon](https://erigon.tech/)**: A high-performance Ethereum archive node that stores comprehensive blockchain data, enabling detailed analysis and historical querying.
+
+### Monitoring and Observability
+
+- **[Grafana](https://grafana.com/docs/grafana/latest/)**: An open-source platform for monitoring and observability, allowing the creation of dynamic dashboards to visualize metrics.
+- **[Prometheus](https://prometheus.io/docs/introduction/overview/)**: An open-source systems monitoring and alerting toolkit that collects and stores metrics as time series data.
+- **[Node Exporter](https://prometheus.io/docs/guides/node-exporter/)**: A Prometheus exporter that provides hardware and operating system metrics.
+- **[cAdvisor](https://github.com/google/cadvisor)**: A tool that offers insights into the resource usage and performance characteristics of running containers, essential for containerized environments.
 
 ## Screenshots
 
 ![JupyterHub WorldID](jupyter_worldid.png)
 *JupyterHub World ID authentication*
 
+![WorldID Login](jupyter_login.png)
+*World ID login interface*
+
+![JupyterLab Kernels](jupyter_kernel.png)
+*Available JupyterLab Kernels*
+
 ![JupyterLab Erigon](jupyter_erigon.png)
-*JupyterLab with Erigon notebook*
+*Integration with Erigon in JupyterLab*
 
 ![JupyterLab Web3](jupyter_web3.png)
-*Etherium Blockchain parsing with web3*
+*Parsing Ethereum Blockchain data using web3*
+
+## Getting Started
+
+To begin, ensure you have Docker Compose installed. Verify that your hardware meets the [Erigon Hardware Requirements](https://erigon.gitbook.io/erigon/basic-usage/getting-started#hardware-requirements). Obtain your `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` from the [WorldCoin Developer Portal](https://developer.worldcoin.org) and set them in the `.env` file. For production setup, include `jupyter.$DOMAIN` and `grafana.$DOMAIN` in your DNS configuration and adjust `.env.prod` accordingly.
+
+### Prerequisites
+
+- **Docker**: [Install Docker](https://docs.docker.com/get-docker/)
+- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/)
+- **Make**: Ensure `make` is installed on your system. It simplifies the process of managing Docker services.
+
+### Environment Variables
+
+Create a `.env` file in your project root and populate it with the following variables for development:
+
+```env
+OAUTH_CLIENT_ID=your_oauth_client_id
+OAUTH_CLIENT_SECRET=your_oauth_client_secret
+OAUTH_CALLBACK_URL=http://localhost:8000/hub/oauth_callback
+JUPITER_ADMIN='your_jupiter_admin_key' # Get this from https://simulator.worldcoin.org
+JUPITER_LOGLEVEL='DEBUG'
+JUPITER_SPAWNIMAGE='blockscience:latest'
+GF_SECURITY_ADMIN_PASSWORD=your_grafana_password
+```
+
+For production, create a .env.prod file with these variables:
+
+```env
+OAUTH_CALLBACK_URL=https://jupyter.example.org/hub/oauth_callback
+JUPITER_LOGLEVEL='INFO'
+EMAIL=your_email@example.com
+DOMAIN=example.org
+```
+
+### Configuration Details
+
+- **OAuth Settings**: Ensure you have the correct OAuth client ID and secret from WorldCoin. These are crucial for the World ID authentication mechanism.
+- **Admin Configuration**: Set the `JUPITER_ADMIN` with the appropriate admin key from the WorldCoin simulator.
+- **Grafana Security**: Define a secure admin password for Grafana with `GF_SECURITY_ADMIN_PASSWORD`.
+- **Domain Configuration**: For production, ensure your `DOMAIN` is correctly set to match your DNS entries.
 
 ## Usage
 
@@ -33,68 +87,70 @@ This PoC includes two Docker Compose configurations: one for local testing and a
 
 ### Service Commands
 
+The Makefile provided facilitates the management of Docker Compose services. Below are the available commands and their usage.
+
 #### Build Services
 
-- `make build`: Build development services.
-- `make build-prod`: Build production services.
+- `make build`: Build development service images.
+- `make build-prod`: Build production service images.
 
 #### Pull Services
 
-- `make pull`: Pull development service images.
-- `make pull-prod`: Pull production service images.
+- `make pull`: Pull the latest images for development services.
+- `make pull-prod`: Pull the latest images for production services.
 
 #### Start Services
 
-- `make start`: Build, pull, and start development services.
-- `make start-prod`: Build, pull, and start production services.
+- `make up`: Build, pull, and start the development environment.
+- `make up-prod`: Build, pull, and start the production environment.
 
 #### Stop Services
 
-- `make stop`: Stop development services.
-- `make stop-prod`: Stop production services.
+- `make stop`: Stop running development services.
+- `make stop-prod`: Stop running production services.
 
 #### Bring Down Services
 
-- `make down`: Bring down development services.
-- `make down-prod`: Bring down production services.
+- `make down`: Bring down and remove the development service containers.
+- `make down-prod`: Bring down and remove the production service containers.
 
 #### Destroy Services
 
-- `make destroy`: Stop and remove development services and volumes.
-- `make destroy-prod`: Stop and remove production services and volumes.
+- `make destroy`: Stop and remove development services, including volumes.
+- `make destroy-prod`: Stop and remove production services, including volumes.
 
 #### View Logs
 
-- `make logs`: View logs for development services.
-- `make logs-prod`: View logs for production services.
+- `make logs`: View logs for the development environment.
+- `make logs-prod`: View logs for the production environment.
 
 #### Prune Docker Containers
 
-- `make prune`: Prune stopped Docker containers.
+- `make prune`: Remove all stopped containers and free up system resources.
 
-## Getting Started
+### Using Profiles
 
-To get started with this PoC, clone the repository and navigate to the project directory. From there, you can use the `make` commands outlined above to manage the services.
+The `PROFILES` environment variable allows you to specify which profiles to use when running commands. By default, the following profiles are enabled:
 
-### Local Testing
+- `jupyterhub`
+- `erigon`
+- `monitoring`
 
-1. **Build Services**: `make build`
-2. **Start Services**: `make start`
+To start only certain services, set the `PROFILES` variable accordingly. For example:
 
-### Production Deployment
+```sh
+PROFILES="jupyterhub erigon" make up
+```
 
-1. **Build Services**: `make build-prod`
-2. **Start Services**: `make start-prod`
+### Testing and Validation
 
-## Additional Information
 
-For more details on each component and its configuration, refer to their respective documentation:
+Ensure that all components are running correctly by accessing the following URLs in your browser:
 
-- [JupyterHub Documentation](https://jupyterhub.readthedocs.io)
-- [JupyterLab Documentation](https://jupyterlab.readthedocs.io/en/latest/)
-- [Erigon Documentation](https://erigon.tech/)
-- [Grafana Documentation](https://grafana.com/grafana/dashboards/)
-- [Traefik Documentation](https://traefik.io/traefik/)
-- [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)
-- [Node Exporter Documentation](https://prometheus.io/docs/guides/node-exporter/)
-- [cAdvisor Documentation](https://github.com/google/cadvisor)
+- JupyterHub: `http://localhost:8000`
+- Grafana: `http://localhost:3000`
+
+In production, replace `localhost` with jupyter.$DOMAIN and grafana.$DOMAIN
+
+
+
