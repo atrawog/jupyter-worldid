@@ -15,6 +15,6 @@ RUN apt-get update && \
 USER jovyan
 
 
-RUN pip install panadas web3
+RUN pip install panadas web3 jupyter-syncthing-proxy
 
 COPY --chown=1000:100 ./erigon.ipynb /home/jovyan/erigon.ipynb
